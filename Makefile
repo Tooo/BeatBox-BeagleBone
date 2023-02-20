@@ -35,5 +35,5 @@ wav:
 	cp -R beatbox-wav-files/* $(PUBDIR)/beatbox-wav-files/ 
 node:
 	mkdir -p $(PUBDIR)/beatbox-server-copy/ 
-	cp -R as3-server/* $(PUBDIR)/beatbox-server-copy/ 
+	cp -R beatbox-server/* $(PUBDIR)/beatbox-server-copy/ 
 	cd $(PUBDIR)/beatbox-server-copy/ && npm install
