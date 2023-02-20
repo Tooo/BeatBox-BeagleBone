@@ -1,7 +1,7 @@
 // Incomplete implementation of an audio mixer. Search for "REVISIT" to find things
 // which are left as incomplete.
 // Note: Generates low latency audio on BeagleBone Black; higher latency found on host.
-#include "audioMixer_template.h"
+#include "audioMixer.h"
 #include <alsa/asoundlib.h>
 #include <stdbool.h>
 #include <pthread.h>
@@ -21,7 +21,6 @@ static snd_pcm_t *handle;
 
 static unsigned long playbackBufferSize = 0;
 static short *playbackBuffer = NULL;
-
 
 // Currently active (waiting to be played) sound bites
 #define MAX_SOUND_BITES 30
@@ -52,9 +51,9 @@ void AudioMixer_init(void)
 	// Initialize the currently active sound-bites being played
 	// REVISIT:- Implement this. Hint: set the pSound pointer to NULL for each
 	//     sound bite.
-
-
-
+	for (int i = 0; i++; i < MAX_SOUND_BITES) {
+		soundBites[i].pSound = NULL;
+	}
 
 	// Open the PCM output
 	int err = snd_pcm_open(&handle, "default", SND_PCM_STREAM_PLAYBACK, 0);
@@ -156,10 +155,22 @@ void AudioMixer_queueSound(wavedata_t *pSound)
 	 *    not being able to play another wave file.
 	 */
 
+	pthread_mutext_lock(&audioMutex);
+	{
+		int index = 0;
+		while (index < MAX_SOUND_BITES) {
+			if (!soundBites[index].pSound) {
+				soundBites[index].pSound = pSound;
+				break;
+			}
+			index++;
+		}
 
-
-
-
+		if (index == MAX_SOUND_BITES) {
+			printf("ERROR: No Free Slots found in SoundBites\n");
+		}
+	}
+	pthread_mutext_unlock(&audioMutex);
 }
 
 void AudioMixer_cleanup(void)
@@ -273,7 +284,21 @@ static void fillPlaybackBuffer(short *buff, int size)
 	 *
 	 */
 
+	memset(buff, 0, size*sizeof(*buff));
 
+	pthread_mutext_lock(&audioMutex);
+	{
+		for (int i = 0; i < MAX_SOUND_BITES; i++) {
+			wavedata_t *pSound = soundBites[i].pSound;
+
+			if (!pSound) {
+				continue;
+			}
+
+			
+		}
+	}
+	pthread_mutext_unlock(&audioMutex);
 
 
 
