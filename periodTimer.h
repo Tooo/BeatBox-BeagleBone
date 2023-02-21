@@ -1,6 +1,4 @@
-#ifndef _PERIOD_TIMER_H_
-#define _PERIOD_TIMER_H_
-
+// periodTimer.h
 // Module to record and report the timing of periodic events.
 //     Written by Brian Fraser
 // Usage:
@@ -14,6 +12,8 @@
 //     data collected for this event (but not others).
 //     For example, call this function once a second to get timing
 //     information to print to the screen.
+#ifndef _PERIOD_TIMER_H_
+#define _PERIOD_TIMER_H_
 
 // Maximum number of timestamps to record for a given event.
 #define MAX_EVENT_TIMESTAMPS (1024*4)
@@ -39,6 +39,8 @@ void Period_cleanup(void);
 // Period_getStatisticsAndClear() to access these timestamps
 // and compute the timing statistics for this periodic event.
 void Period_markEvent(enum Period_whichEvent whichEvent);
+
+void Timer_sleepForMs(long long delayInMs);
 
 // Fill the `pStats` struct, which must be allocated by the calling
 // code, with the statistics about the periodic event `whichEvent`.
