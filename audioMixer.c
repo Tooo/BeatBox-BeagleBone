@@ -51,7 +51,7 @@ void AudioMixer_init(void)
 	// Initialize the currently active sound-bites being played
 	// REVISIT:- Implement this. Hint: set the pSound pointer to NULL for each
 	//     sound bite.
-	for (int i = 0; i++; i < MAX_SOUND_BITES) {
+	for (int i = 0; i < MAX_SOUND_BITES; i++) {
 		soundBites[i].pSound = NULL;
 	}
 
@@ -155,7 +155,7 @@ void AudioMixer_queueSound(wavedata_t *pSound)
 	 *    not being able to play another wave file.
 	 */
 
-	pthread_mutext_lock(&audioMutex);
+	pthread_mutex_lock(&audioMutex);
 	{
 		int index = 0;
 		while (index < MAX_SOUND_BITES) {
@@ -170,7 +170,7 @@ void AudioMixer_queueSound(wavedata_t *pSound)
 			printf("ERROR: No Free Slots found in SoundBites\n");
 		}
 	}
-	pthread_mutext_unlock(&audioMutex);
+	pthread_mutex_unlock(&audioMutex);
 }
 
 void AudioMixer_cleanup(void)
@@ -286,7 +286,7 @@ static void fillPlaybackBuffer(short *buff, int size)
 
 	memset(buff, 0, size*sizeof(*buff));
 
-	pthread_mutext_lock(&audioMutex);
+	pthread_mutex_lock(&audioMutex);
 	{
 		for (int i = 0; i < MAX_SOUND_BITES; i++) {
 			wavedata_t *pSound = soundBites[i].pSound;
@@ -327,11 +327,7 @@ static void fillPlaybackBuffer(short *buff, int size)
 
 		}
 	}
-	pthread_mutext_unlock(&audioMutex);
-
-
-
-
+	pthread_mutex_unlock(&audioMutex);
 
 }
 
