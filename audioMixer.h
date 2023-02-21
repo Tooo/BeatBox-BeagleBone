@@ -15,6 +15,10 @@ typedef struct {
 void AudioMixer_init(void);
 void AudioMixer_cleanup(void);
 
+// Begin/end background thread which mixes audio
+void AudioMixer_startMixing(void);
+void AudioMixer_stopMixing(void);
+
 // Read the contents of a wave file into the pSound structure. Note that
 // the pData pointer in this structure will be dynamically allocated in
 // readWaveFileIntoMemory(), and is freed by calling freeWaveFileData().

@@ -1,13 +1,14 @@
 // Incomplete implementation of an audio mixer. Search for "REVISIT" to find things
 // which are left as incomplete.
 // Note: Generates low latency audio on BeagleBone Black; higher latency found on host.
-#include "audioMixer.h"
 #include <alsa/asoundlib.h>
 #include <stdbool.h>
 #include <pthread.h>
 #include <limits.h>
 #include <alloca.h> // needed for mixer
 
+#include "audioMixer.h"
+#include "shutdownManager.h"
 
 static snd_pcm_t *handle;
 
@@ -37,9 +38,8 @@ typedef struct {
 static playbackSound_t soundBites[MAX_SOUND_BITES];
 
 // Playback threading
-void* playbackThread(void* arg);
-static bool stopping = false;
-static pthread_t playbackThreadId;
+void* playbackThreadFunction(void* arg);
+static pthread_t playbackThread;
 static pthread_mutex_t audioMutex = PTHREAD_MUTEX_INITIALIZER;
 
 static int volume = 0;
@@ -82,9 +82,32 @@ void AudioMixer_init(void)
 	snd_pcm_get_params(handle, &unusedBufferSize, &playbackBufferSize);
 	// ..allocate playback buffer:
 	playbackBuffer = malloc(playbackBufferSize * sizeof(*playbackBuffer));
+}
 
+void AudioMixer_cleanup(void)
+{
+	// Shutdown the PCM output, allowing any pending sound to play out (drain)
+	snd_pcm_drain(handle);
+	snd_pcm_close(handle);
+
+	// Free playback buffer
+	// (note that any wave files read into wavedata_t records must be freed
+	//  in addition to this by calling AudioMixer_freeWaveFileData() on that struct.)
+	free(playbackBuffer);
+	playbackBuffer = NULL;
+
+	fflush(stdout);
+}
+
+void AudioMixer_startMixing(void)
+{
 	// Launch playback thread:
-	pthread_create(&playbackThreadId, NULL, playbackThread, NULL);
+	pthread_create(&playbackThread, NULL, playbackThreadFunction, NULL);
+}
+
+void AudioMixer_stopMixing(void)
+{
+	pthread_join(playbackThread, NULL);
 }
 
 
@@ -172,29 +195,6 @@ void AudioMixer_queueSound(wavedata_t *pSound)
 	}
 	pthread_mutex_unlock(&audioMutex);
 }
-
-void AudioMixer_cleanup(void)
-{
-	printf("Stopping audio...\n");
-
-	// Stop the PCM generation thread
-	stopping = true;
-	pthread_join(playbackThreadId, NULL);
-
-	// Shutdown the PCM output, allowing any pending sound to play out (drain)
-	snd_pcm_drain(handle);
-	snd_pcm_close(handle);
-
-	// Free playback buffer
-	// (note that any wave files read into wavedata_t records must be freed
-	//  in addition to this by calling AudioMixer_freeWaveFileData() on that struct.)
-	free(playbackBuffer);
-	playbackBuffer = NULL;
-
-	printf("Done stopping audio...\n");
-	fflush(stdout);
-}
-
 
 int AudioMixer_getVolume()
 {
@@ -331,11 +331,10 @@ static void fillPlaybackBuffer(short *buff, int size)
 
 }
 
-
-void* playbackThread(void* arg)
+void* playbackThreadFunction(void* arg)
 {
 
-	while (!stopping) {
+	while (!Shutdown_isShuttingDown()) {
 		// Generate next block of audio
 		fillPlaybackBuffer(playbackBuffer, playbackBufferSize);
 
@@ -362,19 +361,3 @@ void* playbackThread(void* arg)
 
 	return NULL;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
