@@ -245,8 +245,8 @@ static void fillPlaybackBuffer(short *buff, int size)
 {
 	/*
 	 * REVISIT: Implement this
-	 * 1. Wipe the playbackBuffer to all 0's to clear any previous PCM data.
-	 *    Hint: use memset()
+	 * 1. Wipe the buff to all 0's to clear any previous PCM data.
+	 *    Hint: use memset(); read the docs about its use of size.
 	 * 2. Since this is called from a background thread, and soundBites[] array
 	 *    may be used by any other thread, must synchronize this.
 	 * 3. Loop through each slot in soundBites[], which are sounds that are either
@@ -295,7 +295,36 @@ static void fillPlaybackBuffer(short *buff, int size)
 				continue;
 			}
 
+			int newLocation = soundBites[i].location;
+			int numSamples = pSound->numSamples;
+			int bufferCount = 0;
 			
+
+			while (newLocation < numSamples && bufferCount < size) {
+				int data = pSound->pData[newLocation];
+
+				data += buff[bufferCount];
+
+				if (data > SHRT_MAX) {
+					data = SHRT_MAX;
+				} else if (data < SHRT_MIN) {
+					data = SHRT_MIN;
+				}
+
+				buff[bufferCount] = data;
+
+				newLocation++;
+				bufferCount++;
+			}
+
+			if (newLocation == numSamples) {
+				AudioMixer_freeWaveFileData(pSound);
+				soundBites[i].pSound = NULL;
+				soundBites[i].location = 0;
+			} else {
+				soundBites[i].location = newLocation;
+			}
+
 		}
 	}
 	pthread_mutext_unlock(&audioMutex);
