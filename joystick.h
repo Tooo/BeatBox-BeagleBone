@@ -8,6 +8,7 @@ typedef enum {
     JOYSTICK_DOWN,
     JOYSTICK_LEFT,
     JOYSTICK_RIGHT,
+    JOYSTICK_PUSH,
     JOYSTICK_DIRECTION_COUNT,
     JOYSTICK_NO_DIRECTION
 } JoystickDirection;
