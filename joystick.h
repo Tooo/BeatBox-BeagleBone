@@ -13,9 +13,9 @@ typedef enum {
     JOYSTICK_NO_DIRECTION
 } JoystickDirection;
 
-void Joystick_intialize(void);
+void Joystick_init(void);
 
-void Joystick_cleanUp(void);
+void Joystick_cleanup(void);
 
 JoystickDirection Joystick_getDirection(void);
 

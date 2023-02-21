@@ -12,7 +12,7 @@ static char* valueFile = "/sys/class/gpio/gpio%d/value";
 // Up, Down, Left, Right, Push
 static int joystickGPIO[JOYSTICK_DIRECTION_COUNT] = {26, 46, 65, 47, 27};
 
-void Joystick_intialize(void)
+void Joystick_init(void)
 {
     // Configure pin's functions
     System_runCommand("config-pin p8.14 gpio");
@@ -31,7 +31,7 @@ void Joystick_intialize(void)
     }
 }
 
-void Joystick_cleanUp(void)
+void Joystick_cleanup(void)
 {
     // do nothing
 }
