@@ -3,7 +3,7 @@
 
 # Edit this file to compile extra C files into their own programs.
 TARGET= beatbox
-SOURCES= main.c audioMixer.c your_other_files_here.c
+SOURCES= main.c shutdownManager.c audioMixer.c periodTimer.c joystick.c system.c
 
 PUBDIR = $(HOME)/cmpt433/public/myApps
 OUTDIR = $(PUBDIR)
@@ -22,7 +22,7 @@ LFLAGS = -L$(HOME)/cmpt433/public/asound_lib_BBB
 #CFLAGS += -pg
 
 
-all: wav node
+all: wav # node
 	$(CC_C) $(CFLAGS) $(SOURCES) -o $(OUTDIR)/$(TARGET)  $(LFLAGS) -lpthread -lasound
 
 
@@ -33,7 +33,7 @@ clean:
 wav:
 	mkdir -p $(PUBDIR)/beatbox-wav-files/ 
 	cp -R beatbox-wav-files/* $(PUBDIR)/beatbox-wav-files/ 
-node:
-	mkdir -p $(PUBDIR)/beatbox-server-copy/ 
-	cp -R beatbox-server/* $(PUBDIR)/beatbox-server-copy/ 
-	cd $(PUBDIR)/beatbox-server-copy/ && npm install
+# node:
+# 	mkdir -p $(PUBDIR)/beatbox-server-copy/ 
+# 	cp -R beatbox-server/* $(PUBDIR)/beatbox-server-copy/ 
+# 	cd $(PUBDIR)/beatbox-server-copy/ && npm install
