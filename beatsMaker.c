@@ -18,7 +18,7 @@ void* beatsThreadFunction(void* arg);
 static pthread_t beatsThread;
 
 static BeatsModeEnum modeNum;
-static bool** currentBeats;
+static bool (*currentBeats)[SOUND_COUNT];
 static int beatIndex;
 
 #define BEAT_COUNT 8
@@ -26,7 +26,7 @@ static int beatIndex;
 static char soundFile[SOUND_COUNT][FILENAME_MAX] = {
     "beatbox-wav-files/100051__menegass__gui-drum-bd-hard.wav",
     "beatbox-wav-files/100053__menegass__gui-drum-cc.wav",
-    "beatbox-wav-files/100059__menegass__gui-snare-soft.wav"
+    "beatbox-wav-files/100059__menegass__gui-drum-snare-soft.wav"
 };
 
 // Pattern for beats1
@@ -91,7 +91,7 @@ int BeatsMaker_getMode(void) {
 
 void BeatsMaker_cycleMode(void) {
     int mode = modeNum + 1;
-    if (mode > BEATS_MODE_COUNT) {
+    if (mode >= BEATS_MODE_COUNT) {
         mode = 0;
     }
     BeatsMaker_changeMode(mode);
