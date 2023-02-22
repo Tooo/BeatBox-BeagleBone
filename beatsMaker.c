@@ -35,11 +35,11 @@ int  BeatsMaker_getBpm(void)
 
 void BeatsMaker_addBpm(int amount)
 {
-    int newBpm = bpm += amount;
-    if (newBpm < MIN_BPM || newBpm > MAX_BPM) {
-        return;
+    int newBpm = bpm + amount;
+    if (newBpm >= MIN_BPM && newBpm <= MAX_BPM) {
+        BeatsMaker_setBpm(newBpm);
     }
-    BeatsMaker_setBpm(newBpm);
+    return;
 }
 
 void BeatsMaker_setBpm(int newBpm)

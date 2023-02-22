@@ -205,11 +205,11 @@ int AudioMixer_getVolume()
 }
 
 void AudioMixer_addVolume(int amount) {
-	int newVolume = volume += amount;
-	if (newVolume < 0 || newVolume > AUDIOMIXER_MAX_VOLUME) {
-		return;
+	int newVolume = volume + amount;
+	if (newVolume >= 0 && newVolume <= AUDIOMIXER_MAX_VOLUME) {
+		AudioMixer_setVolume(newVolume);
 	}
-	AudioMixer_setVolume(newVolume);
+	return;
 }
 
 // Function copied from:
