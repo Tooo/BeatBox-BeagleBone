@@ -6,17 +6,45 @@
 #include "shutdownManager.h"
 #include "periodTimer.h"
 
+#define DEFAULT_BPM 80
+#define MAX_BPM 300
+#define MIN_BPM 40
+
+static int bpm;
+static int beatsSleepMs;
+
 void* beatsThreadFunction(void* arg);
 static pthread_t beatsThread;
 
 void BeatsMaker_startMaking(void)
 {
+    BeatsMaker_setBpm(DEFAULT_BPM);
     pthread_create(&beatsThread, NULL, beatsThreadFunction, NULL);
 }
 
 void BeatsMaker_stopMaking(void)
 {
     pthread_join(beatsThread, NULL);
+}
+
+int  BeatsMaker_getBpm(void)
+{
+    return bpm;
+}
+
+void BeatsMaker_addBpm(int amount)
+{
+    int newBpm = bpm += amount;
+    if (newBpm < MIN_BPM || newBpm > MAX_BPM) {
+        return;
+    }
+    BeatsMaker_setBpm(newBpm);
+}
+
+void BeatsMaker_setBpm(int newBpm)
+{
+    bpm = newBpm;
+    beatsSleepMs = (60 / bpm / 2)*1000;
 }
 
 void* beatsThreadFunction(void* arg)
@@ -29,16 +57,13 @@ void* beatsThreadFunction(void* arg)
         AudioMixer_readWaveFileIntoMemory("beatbox-wav-files/100051__menegass__gui-drum-bd-hard.wav", pSound);
         AudioMixer_queueSound(pSound);
 
-
         wavedata_t* pSound2;
         pSound2 = malloc(sizeof(*pSound2));
 
-        AudioMixer_readWaveFileIntoMemory("beatbox-wav-files/100061__menegass__gui-drum-splash-soft.wav", pSound2);
+        AudioMixer_readWaveFileIntoMemory("beatbox-wav-files/100053__menegass__gui-drum-cc.wav", pSound2);
         AudioMixer_queueSound(pSound2);
 
-
-        Timer_sleepForMs(1000);
-        
+        Timer_sleepForMs(beatsSleepMs);
     }
     return NULL;
 }
