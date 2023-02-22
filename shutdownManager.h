@@ -2,8 +2,8 @@
 // Module to manage the shutdown of the application
 // Refer to Brian's idea in the lecture
 // and previous creation of Shutdown Manager in CMPT 300
-#ifndef _SHUTDOWNMANAGER_H_
-#define _SHUTDOWNMANAGER_H_
+#ifndef SHUTDOWNMANAGER_H_
+#define SHUTDOWNMANAGER_H_
 
 #include <stdbool.h>
 

@@ -2,6 +2,7 @@
 
 #include "shutdownManager.h"
 #include "audioMixer.h"
+#include "beatsMaker.h"
 
 // Mutex variables
 static pthread_mutex_t shutdownMutex = PTHREAD_MUTEX_INITIALIZER;
@@ -14,11 +15,13 @@ void Shutdown_init(void)
 {   
     isShuttingDown = false;
     AudioMixer_startMixing();
+    BeatsMaker_startMaking();
 }
 
 void Shutdown_cleanup(void)
 {
     AudioMixer_stopMixing();
+    BeatsMaker_stopMaking();
 }
 
 void Shutdown_wait(void)
