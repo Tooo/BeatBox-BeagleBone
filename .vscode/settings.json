@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "shutdownmanager.h": "c",
+        "joystickreader.h": "c"
+    }
+}

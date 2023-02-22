@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <pthread.h>
+#include <stdio.h>
 
 #include "beatsMaker.h"
 #include "audioMixer.h"
@@ -44,7 +45,7 @@ void BeatsMaker_addBpm(int amount)
 void BeatsMaker_setBpm(int newBpm)
 {
     bpm = newBpm;
-    beatsSleepMs = (60 / bpm / 2)*1000;
+    beatsSleepMs = ((60*1000)/ bpm) / 2;
 }
 
 void* beatsThreadFunction(void* arg)
