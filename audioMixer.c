@@ -203,6 +203,14 @@ int AudioMixer_getVolume()
 	return volume;
 }
 
+void AudioMixer_addVolume(int amount) {
+	int newVolume = volume += amount;
+	if (newVolume < 0 || newVolume > AUDIOMIXER_MAX_VOLUME) {
+		return;
+	}
+	AudioMixer_setVolume(newVolume);
+}
+
 // Function copied from:
 // http://stackoverflow.com/questions/6787318/set-alsa-master-volume-from-c-code
 // Written by user "trenki".

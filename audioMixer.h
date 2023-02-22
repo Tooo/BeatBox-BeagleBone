@@ -32,6 +32,7 @@ void AudioMixer_queueSound(wavedata_t *pSound);
 // setVolume() function posted by StackOverflow user "trenki" at:
 // http://stackoverflow.com/questions/6787318/set-alsa-master-volume-from-c-code
 int  AudioMixer_getVolume(void);
+void AudioMixer_addVolume(int amount);
 void AudioMixer_setVolume(int newVolume);
 
 #endif
