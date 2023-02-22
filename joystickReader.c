@@ -11,8 +11,8 @@
 #define BPM_INCREMENT 5
 
 static const int joystickSleepMs = 10;
-static const int joystickPushSleepMS = 200;
-static const int joystickDirectionSleepMS = 100;
+static const int joystickPushSleepMS = 300;
+static const int joystickDirectionSleepMS = 250;
 static void* joystickThreadFunction(void* arg);
 static pthread_t joystickThread;
 
@@ -45,9 +45,9 @@ void* joystickThreadFunction(void* arg)
             AudioMixer_addVolume(VOLUME_INCREMENT);
         } else if (direction == JOYSTICK_DOWN) {
             AudioMixer_addVolume(-VOLUME_INCREMENT);
-        } else if (direction == JOYSTICK_LEFT) {
-            BeatsMaker_addBpm(BPM_INCREMENT);
         } else if (direction == JOYSTICK_RIGHT) {
+            BeatsMaker_addBpm(BPM_INCREMENT);
+        } else if (direction == JOYSTICK_LEFT) {
             BeatsMaker_addBpm(-BPM_INCREMENT);
         }
 
