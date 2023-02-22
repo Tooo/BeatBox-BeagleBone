@@ -37,6 +37,7 @@ void* joystickThreadFunction(void* arg)
         }
 
         if (direction == JOYSTICK_PUSH) {
+            BeatsMaker_cycleMode();
             Timer_sleepForMs(joystickPushSleepMS);
             continue;
         }

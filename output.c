@@ -41,7 +41,7 @@ static void* Output_threadFunction(void* args)
 
 static void Output_printStats(void)
 {
-    printf("M%d  ", 0);
+    printf("M%d  ", BeatsMaker_getMode());
     printf("%3dbpm  ", BeatsMaker_getBpm());
     printf("vol:%3d  ", AudioMixer_getVolume());
 }
