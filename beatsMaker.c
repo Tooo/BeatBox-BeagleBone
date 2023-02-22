@@ -58,6 +58,7 @@ static bool beats2[BEAT_COUNT][SOUND_COUNT] = {
 void BeatsMaker_startMaking(void)
 {
     BeatsMaker_setBpm(DEFAULT_BPM);
+    BeatsMaker_changeMode(BEATS_MODE_0);
     pthread_create(&beatsThread, NULL, beatsThreadFunction, NULL);
 }
 
