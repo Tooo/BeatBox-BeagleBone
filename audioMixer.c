@@ -9,6 +9,7 @@
 
 #include "audioMixer.h"
 #include "shutdownManager.h"
+#include "periodTimer.h"
 
 static snd_pcm_t *handle;
 
@@ -365,6 +366,7 @@ void* playbackThreadFunction(void* arg)
 			printf("Short write (expected %li, wrote %li)\n",
 					playbackBufferSize, frames);
 		}
+		Period_markEvent(PERIOD_EVENT_REFILL_PLAYBACK_BUFFER);
 	}
 
 	return NULL;

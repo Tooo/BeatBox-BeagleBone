@@ -4,6 +4,7 @@
 #include "audioMixer.h"
 #include "beatsMaker.h"
 #include "joystickReader.h"
+#include "output.h"
 
 // Mutex variables
 static pthread_mutex_t shutdownMutex = PTHREAD_MUTEX_INITIALIZER;
@@ -18,10 +19,12 @@ void Shutdown_init(void)
     AudioMixer_startMixing();
     BeatsMaker_startMaking();
     JoystickReader_startReading();
+    Output_startOutputing();
 }
 
 void Shutdown_cleanup(void)
 {
+    Output_stopOutputing();
     JoystickReader_stopReading();
     BeatsMaker_stopMaking();
     AudioMixer_stopMixing();
