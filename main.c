@@ -6,6 +6,7 @@
 #include "periodTimer.h"
 #include "audioMixer.h"
 #include "joystick.h"
+#include "accelerometer.h"
 
 // Initialize/cleanup the module's data structures.
 static void main_init(void);
@@ -24,12 +25,14 @@ static void main_init(void)
     AudioMixer_init();
     Period_init();
     Joystick_init();
+    Accelerometer_init();
     Shutdown_init();
 }
 
 static void main_cleanup(void)
 {
     Shutdown_cleanup();
+    Accelerometer_cleanup();
     Joystick_cleanup();
     Period_cleanup();
     AudioMixer_cleanup();
