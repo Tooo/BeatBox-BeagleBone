@@ -34,7 +34,7 @@ static void* Output_threadFunction(void* args)
         Output_printStats();
         Output_printTimingJitter(PERIOD_EVENT_REFILL_PLAYBACK_BUFFER, "Audio");
         printf("  ");
-        Output_printTimingJitter(PERIOD_EVENT_SAMPLE_ACCELEROMETER, "Acccel");
+        Output_printTimingJitter(PERIOD_EVENT_SAMPLE_ACCELEROMETER, "Accel");
         printf("\n");
         Timer_sleepForMs(outputSleepMs);
     }
