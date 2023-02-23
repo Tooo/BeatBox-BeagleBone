@@ -6,4 +6,10 @@
 void Accelerometer_init(void);
 void Accelerometer_cleanup(void);
 
+void Accelerometer_readAndCalculateValues(void);
+
+int Accelerometer_getX(void);
+int Accelerometer_getY(void);
+int Accelerometer_getZ(void);
+
 #endif

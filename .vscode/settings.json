@@ -2,6 +2,8 @@
     "files.associations": {
         "shutdownmanager.h": "c",
         "joystickreader.h": "c",
-        "periodtimer.h": "c"
+        "periodtimer.h": "c",
+        "type_traits": "c",
+        "system.h": "c"
     }
 }
