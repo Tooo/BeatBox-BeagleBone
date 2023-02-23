@@ -6,6 +6,7 @@
 #include "joystickReader.h"
 #include "output.h"
 #include "acceleReader.h"
+#include "udpListener.h"
 
 // Mutex variables
 static pthread_mutex_t shutdownMutex = PTHREAD_MUTEX_INITIALIZER;
@@ -21,12 +22,14 @@ void Shutdown_init(void)
     BeatsMaker_startMaking();
     JoystickReader_startReading();
     AcceleReader_startReading();
+    Udp_startListening();
     Output_startOutputing();
 }
 
 void Shutdown_cleanup(void)
 {
     Output_stopOutputing();
+    Udp_stopListening();
     AcceleReader_stopReading();
     JoystickReader_stopReading();
     BeatsMaker_stopMaking();

@@ -99,6 +99,10 @@ void BeatsMaker_cycleMode(void) {
 }
 
 void BeatsMaker_changeMode(BeatsModeEnum mode) {
+    if (mode >= BEATS_MODE_COUNT) {
+        return;
+    }
+
     modeNum = mode;
     if (mode == BEATS_MODE_0) {
         currentBeats = NULL;
@@ -110,6 +114,9 @@ void BeatsMaker_changeMode(BeatsModeEnum mode) {
 }
 
 void BeatsMaker_playSound(SoundEnum sound) {
+    if (sound >= SOUND_COUNT) {
+        return;
+    }
     wavedata_t* pSound;
     pSound = malloc(sizeof(*pSound));
     AudioMixer_readWaveFileIntoMemory(soundFile[sound], pSound);
