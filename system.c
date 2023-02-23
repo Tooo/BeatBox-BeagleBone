@@ -110,3 +110,20 @@ unsigned char System_readI2cReg(int i2cFileDesc, unsigned char regAddr)
 	}
 	return value;
 }
+
+void System_readMultipleI2cReg(int i2cFileDesc, unsigned char startAddr, unsigned char* buffer, int size)
+{
+	// To read a register, must first write the address
+	int res = write(i2cFileDesc, &startAddr, sizeof(startAddr));
+	if (res != sizeof(startAddr)) {
+		perror("Unable to write i2c register.");
+		exit(-1);
+	}
+
+	// Now read the value and return it
+	res = read(i2cFileDesc, buffer, sizeof(*buffer)*size);
+	if (res != sizeof(*buffer)*size) {
+		perror("Unable to read i2c register");
+		exit(-1);
+	}
+}

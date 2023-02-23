@@ -16,5 +16,6 @@ void System_writeFile(char* fileName, char* buffer);
 int System_initI2cBus(char* bus, int address);
 void System_writeI2cReg(int i2cFileDesc, unsigned char regAddr, unsigned char value);
 unsigned char System_readI2cReg(int i2cFileDesc, unsigned char regAddr);
+void System_readMultipleI2cReg(int i2cFileDesc, unsigned char startAddr, unsigned char* buffer, int size);
 
 #endif
