@@ -43,8 +43,8 @@ static void* Output_threadFunction(void* args)
 
 static void Output_printStats(void)
 {
-    printf("M%d  ", BeatsMaker_getMode());
-    printf("%3dbpm  ", BeatsMaker_getBpm());
+    printf("M%d ", BeatsMaker_getMode());
+    printf("%3dbpm ", BeatsMaker_getBpm());
     printf("vol:%3d  ", AudioMixer_getVolume());
 }
 
@@ -52,6 +52,6 @@ static void Output_printTimingJitter(enum Period_whichEvent event, char* eventNa
 {
     Period_statistics_t pStats;
     Period_getStatisticsAndClear(event, &pStats);
-    char* timingJitterString = "%s[%0.3f, %0.3f] avg %0.3f/%d";
+    char* timingJitterString = "%s[%6.3f, %6.3f] avg %6.3f/%2d";
     printf(timingJitterString, eventName, pStats.minPeriodInMs, pStats.maxPeriodInMs, pStats.avgPeriodInMs, pStats.numSamples);
 }
