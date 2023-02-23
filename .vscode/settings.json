@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "shutdownmanager.h": "c",
-        "joystickreader.h": "c"
+        "joystickreader.h": "c",
+        "periodtimer.h": "c"
     }
 }
