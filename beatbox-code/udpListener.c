@@ -23,6 +23,9 @@ static struct sockaddr_in sinRemote;
 static pthread_t udpThread;
 static void* Udp_threadFunction(void* args);
 
+#define UDP_VOLUME_INCREMENT 5
+#define UDP_BPM_INCREMENT 5
+
 // Intialize Server function
 static void Udp_serverInit(void);
 
@@ -128,7 +131,7 @@ static void Udp_changeMode(int mode)
     BeatsMaker_changeMode(mode);
     char messageTx[MAX_LEN];
     int newMode = BeatsMaker_getMode();
-    snprintf(messageTx, MAX_LEN, "%d\n", newMode);
+    snprintf(messageTx, MAX_LEN, "mode %d \n", newMode);
     Udp_send(messageTx);
 }
 
@@ -136,19 +139,19 @@ static void Udp_volume(void)
 {
     char messageTx[MAX_LEN];
     int volume = AudioMixer_getVolume();
-    snprintf(messageTx, MAX_LEN, "%d\n", volume);
+    snprintf(messageTx, MAX_LEN, "sound %d \n", volume);
     Udp_send(messageTx);
 }
 
 static void Udp_volumeUp(void)
 {
-    AudioMixer_addVolume(5);
+    AudioMixer_addVolume(UDP_VOLUME_INCREMENT);
     Udp_volume();
 }
 
 static void Udp_volumeDown(void)
 {
-    AudioMixer_addVolume(-5);
+    AudioMixer_addVolume(-UDP_VOLUME_INCREMENT);
     Udp_volume();
 }
 
@@ -156,30 +159,32 @@ static void Udp_tempo(void)
 {
     char messageTx[MAX_LEN];
     int tempo = BeatsMaker_getBpm();
-    snprintf(messageTx, MAX_LEN, "%d\n", tempo);
+    snprintf(messageTx, MAX_LEN, "tempo %d \n", tempo);
     Udp_send(messageTx);
 }
 
 static void Udp_tempoUp(void)
 {
-    BeatsMaker_addBpm(5);
+    BeatsMaker_addBpm(UDP_BPM_INCREMENT);
     Udp_tempo();
 }
 
 static void Udp_tempDown(void)
 {
-    BeatsMaker_addBpm(-5);
+    BeatsMaker_addBpm(-UDP_BPM_INCREMENT);
     Udp_tempo();
 }
 
 static void Udp_playSound(int sound)
 {
     BeatsMaker_playSound(sound);
+    char* messageTx = "played \n";
+    Udp_send(messageTx);
 }
 
 static void Udp_stop(void)
 {
-    char* messageTx = "Program terminating.\n";
+    char* messageTx = "terminating \n";
     Udp_send(messageTx);
     Shutdown_trigger();
 }

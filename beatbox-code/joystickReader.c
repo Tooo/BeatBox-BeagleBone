@@ -7,8 +7,8 @@
 #include "beatsMaker.h"
 #include "periodTimer.h"
 
-#define VOLUME_INCREMENT 5
-#define BPM_INCREMENT 5
+#define JOYSTICK_VOLUME_INCREMENT 5
+#define JOYSTICK_BPM_INCREMENT 5
 
 static const int joystickSleepMs = 10;
 static const int joystickPushSleepMS = 300;
@@ -43,13 +43,13 @@ void* joystickThreadFunction(void* arg)
         }
 
         if (direction == JOYSTICK_UP) {
-            AudioMixer_addVolume(VOLUME_INCREMENT);
+            AudioMixer_addVolume(JOYSTICK_VOLUME_INCREMENT);
         } else if (direction == JOYSTICK_DOWN) {
-            AudioMixer_addVolume(-VOLUME_INCREMENT);
+            AudioMixer_addVolume(-JOYSTICK_VOLUME_INCREMENT);
         } else if (direction == JOYSTICK_RIGHT) {
-            BeatsMaker_addBpm(BPM_INCREMENT);
+            BeatsMaker_addBpm(JOYSTICK_BPM_INCREMENT);
         } else if (direction == JOYSTICK_LEFT) {
-            BeatsMaker_addBpm(-BPM_INCREMENT);
+            BeatsMaker_addBpm(-JOYSTICK_BPM_INCREMENT);
         }
 
         Timer_sleepForMs(joystickDirectionSleepMS);
