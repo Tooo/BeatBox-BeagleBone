@@ -1,0 +1,9 @@
+{
+	"name": "beat-box-server",
+	"version": "1.0.0",
+	"description": "Beat Box Server relaying UDP messages.",
+	"dependencies": {
+		"socket.io": "~0.9.6",
+		"mime": "~1.2.7"
+	}
+}
