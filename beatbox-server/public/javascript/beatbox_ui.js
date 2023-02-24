@@ -26,6 +26,15 @@ $(document).ready(function() {
 	$('#btnTempoUp').click(function(){
 		sendCommandViaUDP("tempoup");
 	});
+	$('#btnPlayHiHat').click(function(){
+		sendCommandViaUDP("sound 1");
+	});
+	$('#btnPlaySnare').click(function(){
+		sendCommandViaUDP("sound 2");
+	});
+	$('#btnPlayBase').click(function(){
+		sendCommandViaUDP("sound 0");
+	});
 	$('#btnStop').click(function(){
 		sendCommandViaUDP("stop");
 	});
