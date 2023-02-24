@@ -5,20 +5,26 @@
 var socket = io.connect();
 $(document).ready(function() {
 
-	$('#modeNone').click(function(){
+	$('#btnModeNone').click(function(){
 		sendCommandViaUDP("mode 0");
 	});
-	$('#modeRock1').click(function(){
+	$('#btnModeRock1').click(function(){
 		sendCommandViaUDP("mode 1");
 	});
-	$('#modeRock2').click(function(){
+	$('#btnModeRock2').click(function(){
 		sendCommandViaUDP("mode 2");
 	});
-	$('#volumeDown').click(function(){
+	$('#btnVolumeDown').click(function(){
 		sendCommandViaUDP("volumedown");
 	});
-	$('#volumeUp').click(function(){
+	$('#btnVolumeUp').click(function(){
 		sendCommandViaUDP("volumeup");
+	});
+	$('#btnTempoDown').click(function(){
+		sendCommandViaUDP("tempodown");
+	});
+	$('#btnTempoUp').click(function(){
+		sendCommandViaUDP("tempoup");
 	});
 	$('#btnStop').click(function(){
 		sendCommandViaUDP("stop");
