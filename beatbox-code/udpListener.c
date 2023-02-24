@@ -41,6 +41,8 @@ static void Udp_playSound(int sound);
 static void Udp_stop(void);
 static void Udp_unknown(void);
 
+static int Udp_getNumber(char* messageTx);
+
 // Return UDP message
 static void Udp_send(char* messageTx);
 
@@ -77,13 +79,7 @@ static void* Udp_threadFunction(void* args)
         // Menu options
         if (strncmp(messageRx, "mode", 4) == 0) {
             if (bytesRx != 1) {
-                char charNum[bytesRx-5];
-                int index = 5;
-                for (int i = 0; i<bytesRx-6; i++) {
-                    charNum[i] = messageRx[index++];
-                }
-                charNum[bytesRx-6] = '\0';
-                num = atoi(charNum);
+                num = Udp_getNumber(messageRx);
             } 
             Udp_changeMode(num);
         } else if (strncmp(messageRx, "volumeup", 8) == 0) {
@@ -100,13 +96,7 @@ static void* Udp_threadFunction(void* args)
             Udp_tempo();
         } else if (strncmp(messageRx, "sound", 5) == 0) {
             if (bytesRx != 1) {
-                char charNum[bytesRx-6];
-                int index = 6;
-                for (int i = 0; i<bytesRx-7; i++) {
-                    charNum[i] = messageRx[index++];
-                }
-                charNum[bytesRx-7] = '\0';
-                num = atoi(charNum);
+                num = Udp_getNumber(messageRx);
             } 
             Udp_playSound(num);
         } else if (strncmp(messageRx, "stop", 4) == 0) {
@@ -198,6 +188,13 @@ static void Udp_unknown(void)
 {
     char* messageTx = "Unknown Command. Please type help for command examples.\n";
     Udp_send(messageTx);
+}
+
+static int Udp_getNumber(char* messageTx)
+{
+    char* token = strtok(messageTx, " ");
+    token = strtok(NULL, " ");
+    return atoi(token);
 }
 
 static void Udp_send(char* messageTx) 
