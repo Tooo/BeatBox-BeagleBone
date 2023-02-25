@@ -30,6 +30,7 @@ static void* Udp_threadFunction(void* args);
 static void Udp_serverInit(void);
 
 // UDP Server Commands
+static void Udp_mode();
 static void Udp_changeMode(int mode);
 
 static void Udp_volume(void);
@@ -80,11 +81,13 @@ static void* Udp_threadFunction(void* args)
         }
 
         // Menu options
-        if (strncmp(messageRx, "mode", 4) == 0) {
+        if (strncmp(messageRx, "mode ", 5) == 0) {
             if (bytesRx != 1) {
                 num = Udp_getNumber(messageRx);
             } 
             Udp_changeMode(num);
+         } else if (strncmp(messageRx, "mode", 4) == 0) {
+            Udp_mode();
         } else if (strncmp(messageRx, "volumeup", 8) == 0) {
             Udp_volumeUp();
         } else if (strncmp(messageRx, "volumedown", 10) == 0) {
@@ -126,20 +129,25 @@ static void Udp_serverInit(void) {
     bind(socketDescriptor, (struct sockaddr*) &sin, sizeof(sin));
 }
 
-static void Udp_changeMode(int mode)
+static void Udp_mode()
 {
-    BeatsMaker_changeMode(mode);
     char messageTx[MAX_LEN];
     int newMode = BeatsMaker_getMode();
     snprintf(messageTx, MAX_LEN, "mode %d \n", newMode);
     Udp_send(messageTx);
 }
 
+static void Udp_changeMode(int mode)
+{
+    BeatsMaker_changeMode(mode);
+    Udp_mode();
+}
+
 static void Udp_volume(void)
 {
     char messageTx[MAX_LEN];
     int volume = AudioMixer_getVolume();
-    snprintf(messageTx, MAX_LEN, "sound %d \n", volume);
+    snprintf(messageTx, MAX_LEN, "volume %d \n", volume);
     Udp_send(messageTx);
 }
 

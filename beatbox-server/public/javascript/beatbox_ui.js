@@ -4,6 +4,9 @@
 // Make connection to server when web page is fully loaded.
 var socket = io.connect();
 $(document).ready(function() {
+	sendCommandViaUDP("mode");
+	sendCommandViaUDP("volume");
+	sendCommandViaUDP("tempo");
 
 	$('#btnModeNone').click(function(){
 		sendCommandViaUDP("mode 0");
@@ -40,11 +43,20 @@ $(document).ready(function() {
 	});
 	
 	socket.on('commandReply', function(result) {
-		var newDiv = $('<code></code>')
-			.text(result)
-			.wrapInner("<div></div>");
-		$('#messages').append(newDiv);
-		$('#messages').scrollTop($('#messages').prop('scrollHeight'));
+		const strArray = result.split(" ");
+		switch(strArray[0]) {
+			case "mode":
+				var modes = ["None", "Rock #1", "Rock #2"];
+				var mode = Number(strArray[1]);
+				$('#modeid').text(modes[mode]);
+				break;
+			case "volume":
+				$('#volumeid').val(strArray[1]);
+				break;
+			case "tempo":
+				$('#tempoid').val(strArray[1]);
+				break;
+		}
 	});
 	
 });
