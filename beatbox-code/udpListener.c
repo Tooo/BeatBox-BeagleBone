@@ -9,6 +9,7 @@
 #include "shutdownManager.h"
 #include "audioMixer.h"
 #include "beatsMaker.h"
+#include "system.h"
 
 // UDP values
 #define MAX_LEN 1024
@@ -26,6 +27,8 @@ static void* Udp_threadFunction(void* args);
 #define UDP_VOLUME_INCREMENT 5
 #define UDP_BPM_INCREMENT 5
 
+static char* uptimePath = "/proc/uptime";
+
 // Intialize Server function
 static void Udp_serverInit(void);
 
@@ -42,6 +45,8 @@ static void Udp_tempoUp(void);
 static void Udp_tempDown(void);
 
 static void Udp_playSound(int sound);
+
+static void Udp_uptime(void);
 static void Udp_stop(void);
 static void Udp_unknown(void);
 
@@ -105,6 +110,8 @@ static void* Udp_threadFunction(void* args)
                 num = Udp_getNumber(messageRx);
             } 
             Udp_playSound(num);
+        } else if (strncmp(messageRx, "uptime", 6) == 0) {
+            Udp_uptime();
         } else if (strncmp(messageRx, "stop", 4) == 0) {
             Udp_stop();
         } else {
@@ -187,6 +194,15 @@ static void Udp_playSound(int sound)
 {
     BeatsMaker_playSound(sound);
     char* messageTx = "played \n";
+    Udp_send(messageTx);
+}
+
+static void Udp_uptime(void)
+{
+    char buffer[MAX_LEN/2];
+    System_readFile(uptimePath, buffer);
+    char messageTx[MAX_LEN];
+    snprintf(messageTx, MAX_LEN, "uptime %s", buffer);
     Udp_send(messageTx);
 }
 

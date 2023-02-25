@@ -8,6 +8,8 @@ $(document).ready(function() {
 	sendCommandViaUDP("volume");
 	sendCommandViaUDP("tempo");
 
+	window.setInterval(function() {requestDeviceUpTime()}, 1000);
+
 	$('#btnModeNone').click(function(){
 		sendCommandViaUDP("mode 0");
 	});
@@ -56,6 +58,9 @@ $(document).ready(function() {
 			case "tempo":
 				$('#tempoid').val(strArray[1]);
 				break;
+			case "uptime":
+				updateDeviceUpTime(strArray[1]);
+				break;
 		}
 	});
 	
@@ -64,3 +69,15 @@ $(document).ready(function() {
 function sendCommandViaUDP(message) {
 	socket.emit('daUdpCommand', message);
 };
+
+function requestDeviceUpTime() {
+	socket.emit('daUdpCommand', "uptime");
+};
+
+function updateDeviceUpTime(uptime) {
+	const uptimeNum = Number(uptime);
+	const hours = Math.floor(uptimeNum / 60 / 60);
+	const minutes = Math.floor((uptimeNum - (60*60*hours)) / 60);
+	const seconds = Math.floor(uptimeNum - (60*60*hours) - (60*minutes));
+	$('#status').text("Device up for: " + hours + ":" + minutes + ":" + seconds + "(H:M:S)");
+}
