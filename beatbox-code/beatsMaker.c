@@ -8,7 +8,7 @@
 #include "shutdownManager.h"
 #include "periodTimer.h"
 
-#define DEFAULT_BPM 80
+#define DEFAULT_BPM 120
 #define MAX_BPM 300
 #define MIN_BPM 40
 
