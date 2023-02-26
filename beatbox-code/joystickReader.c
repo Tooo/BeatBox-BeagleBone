@@ -11,8 +11,8 @@
 #define JOYSTICK_BPM_INCREMENT 5
 
 static const int joystickSleepMs = 10;
-static const int joystickPushSleepMS = 200;
-static const int joystickDirectionSleepMS = 100;
+static const int joystickPushSleepMS = 250;
+static const int joystickDirectionSleepMS = 200;
 static void* joystickThreadFunction(void* arg);
 static pthread_t joystickThread;
 
