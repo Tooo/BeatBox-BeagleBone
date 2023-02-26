@@ -48,18 +48,21 @@ $(document).ready(function() {
 		const strArray = result.split(" ");
 		switch(strArray[0]) {
 			case "mode":
-				var modes = ["None", "Rock #1", "Rock #2"];
-				var mode = Number(strArray[1]);
-				$('#modeid').text(modes[mode]);
+				updateMode(strArray[1]);
 				break;
 			case "volume":
-				$('#volumeid').val(strArray[1]);
+				updateVolume(strArray[1]);
 				break;
 			case "tempo":
-				$('#tempoid').val(strArray[1]);
+				updateTempo(strArray[1]);
 				break;
 			case "uptime":
 				updateDeviceUpTime(strArray[1]);
+				break;
+			case "info":
+				updateMode(strArray[2]);
+				updateVolume(strArray[4]);
+				updateTempo(strArray[6]);
 				break;
 		}
 	});
@@ -72,6 +75,7 @@ function sendCommandViaUDP(message) {
 
 function requestDeviceUpTime() {
 	socket.emit('daUdpCommand', "uptime");
+	socket.emit('daUdpCommand', "info");
 };
 
 function updateDeviceUpTime(uptime) {
@@ -80,4 +84,18 @@ function updateDeviceUpTime(uptime) {
 	const minutes = Math.floor((uptimeNum - (60*60*hours)) / 60);
 	const seconds = Math.floor(uptimeNum - (60*60*hours) - (60*minutes));
 	$('#status').text("Device up for: " + hours + ":" + minutes + ":" + seconds + "(H:M:S)");
+}
+
+function updateMode(mode) {
+	var modes = ["None", "Rock #1", "Rock #2"];
+	var num = Number(mode);
+	$('#modeid').text(modes[num]);
+}
+
+function updateVolume(volume) {
+	$('#volumeid').val(volume);
+}
+
+function updateTempo(tempo) {
+	$('#tempoid').val(tempo);
 }

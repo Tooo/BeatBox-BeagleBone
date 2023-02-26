@@ -47,6 +47,8 @@ static void Udp_tempDown(void);
 static void Udp_playSound(int sound);
 
 static void Udp_uptime(void);
+static void Udp_info(void);
+
 static void Udp_stop(void);
 static void Udp_unknown(void);
 
@@ -112,6 +114,8 @@ static void* Udp_threadFunction(void* args)
             Udp_playSound(num);
         } else if (strncmp(messageRx, "uptime", 6) == 0) {
             Udp_uptime();
+        } else if (strncmp(messageRx, "info", 4) == 0) {
+            Udp_info();
         } else if (strncmp(messageRx, "stop", 4) == 0) {
             Udp_stop();
         } else {
@@ -203,6 +207,16 @@ static void Udp_uptime(void)
     System_readFile(uptimePath, buffer);
     char messageTx[MAX_LEN];
     snprintf(messageTx, MAX_LEN, "uptime %s", buffer);
+    Udp_send(messageTx);
+}
+
+static void Udp_info(void)
+{
+    char messageTx[MAX_LEN];
+    int mode = BeatsMaker_getMode();
+    int volume = AudioMixer_getVolume();
+    int tempo = BeatsMaker_getBpm();
+    snprintf(messageTx, MAX_LEN, "info mode %d volume %d tempo %d", mode, volume, tempo);
     Udp_send(messageTx);
 }
 
