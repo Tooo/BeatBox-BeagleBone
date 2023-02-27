@@ -24,6 +24,7 @@
 // I2C file descriptor
 static int i2cFileDesc;
 
+// Accelerometer values
 static int16_t x;
 static int16_t y;
 static int16_t z;

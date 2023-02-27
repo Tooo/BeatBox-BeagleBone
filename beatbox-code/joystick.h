@@ -13,10 +13,11 @@ typedef enum {
     JOYSTICK_NO_DIRECTION
 } JoystickDirection;
 
+// Initialize/cleanup the module's data structures.
 void Joystick_init(void);
-
 void Joystick_cleanup(void);
 
+// Get current direction of joystick
 JoystickDirection Joystick_getDirection(void);
 
 #endif

@@ -7,9 +7,11 @@
 #include "beatsMaker.h"
 #include "periodTimer.h"
 
+// Joystick increments
 #define JOYSTICK_VOLUME_INCREMENT 5
 #define JOYSTICK_BPM_INCREMENT 5
 
+// Joystick Thread
 static const int joystickSleepMs = 10;
 static const int joystickPushSleepMS = 250;
 static const int joystickDirectionSleepMS = 200;

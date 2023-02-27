@@ -3,6 +3,7 @@
 #ifndef BEATS_MAKER_H_
 #define BEATS_MAKER_H_
 
+// Sounds Enum
 typedef enum {
     SOUND_BASE = 0,
     SOUND_HI_HAT,
@@ -10,6 +11,7 @@ typedef enum {
     SOUND_COUNT
 } SoundEnum;
 
+// Beats Mode Enum
 typedef enum {
     BEATS_MODE_0 = 0,
     BEATS_MODE_1,
@@ -26,8 +28,10 @@ int  BeatsMaker_getBpm(void);
 void BeatsMaker_addBpm(int amount);
 void BeatsMaker_setBpm(int newBpm);
 
+// Play sound from file
 void BeatsMaker_playSound(SoundEnum sound);
 
+// Mode functions
 int BeatsMaker_getMode(void);
 void BeatsMaker_cycleMode(void);
 void BeatsMaker_changeMode(BeatsModeEnum mode);

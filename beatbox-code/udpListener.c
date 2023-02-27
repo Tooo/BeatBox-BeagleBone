@@ -52,6 +52,7 @@ static void Udp_info(void);
 static void Udp_stop(void);
 static void Udp_unknown(void);
 
+// UDP get values
 static int Udp_getNumber(char* messageTx);
 static int Udp_getUptime();
 

@@ -7,28 +7,26 @@
 #include "beatsMaker.h"
 #include "periodTimer.h"
 
+// Average calculations
 #define GFORCE_TOLERANCE 4000
-
-#define AXIS_COUNT 3
-
 static const double averageWeight = 0.001;
-
 static long long sampleTaken = 0;
 static int averages[AXIS_COUNT];
 
-static const int acceleratorSleepMs = 10;
-static const int acceleratorPlaySleepMS = 250;
-static void* acceleratorThreadFunction(void* arg);
-static pthread_t acceleratorThread;
+// Accelerometer thread
+static const int accelerometerSleepMs = 10;
+static const int accelerometerPlaySleepMS = 250;
+static void* accelerometerThreadFunction(void* arg);
+static pthread_t accelerometerThread;
 
 void AcceleReader_startReading(void)
 {
-    pthread_create(&acceleratorThread, NULL, acceleratorThreadFunction, NULL);
+    pthread_create(&accelerometerThread, NULL, accelerometerThreadFunction, NULL);
 }
 
 void AcceleReader_stopReading(void)
 {
-    pthread_join(acceleratorThread, NULL);
+    pthread_join(accelerometerThread, NULL);
 }
 
 static void AcceleReader_calculateAverage(int* accelerations) {
@@ -43,7 +41,7 @@ static void AcceleReader_calculateAverage(int* accelerations) {
     }
 }
 
-static void* acceleratorThreadFunction(void* arg)
+static void* accelerometerThreadFunction(void* arg)
 {
     while(!Shutdown_isShuttingDown()) {
         Accelerometer_readAndCalculateValues();
@@ -65,9 +63,9 @@ static void* acceleratorThreadFunction(void* arg)
             }
         }
         if (played) {
-            Timer_sleepForMs(acceleratorPlaySleepMS);
+            Timer_sleepForMs(accelerometerPlaySleepMS);
         } else {
-            Timer_sleepForMs(acceleratorSleepMs);
+            Timer_sleepForMs(accelerometerSleepMs);
         }
         
     }

@@ -8,21 +8,26 @@
 #include "shutdownManager.h"
 #include "periodTimer.h"
 
+// BPM information
 #define DEFAULT_BPM 120
 #define MAX_BPM 300
 #define MIN_BPM 40
 
+// Beats Thread
 static int bpm;
 static int beatsSleepMs;
 void* beatsThreadFunction(void* arg);
 static pthread_t beatsThread;
 
+// Beats Modes
 static BeatsModeEnum modeNum;
 static bool (*currentBeats)[SOUND_COUNT];
 static int beatIndex;
 
+// Beat per cycle
 #define BEAT_COUNT 8
 
+// Sound files
 static char soundFile[SOUND_COUNT][FILENAME_MAX] = {
     "beatbox-wav-files/100051__menegass__gui-drum-bd-hard.wav",
     "beatbox-wav-files/100053__menegass__gui-drum-cc.wav",

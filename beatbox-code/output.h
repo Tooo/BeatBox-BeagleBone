@@ -4,7 +4,7 @@
 #ifndef OUTPUT_H_
 #define OUTPUT_H_
 
-// Begin/end the background thread which output to screen;
+// Begin/end the background thread which output to screen
 void Output_startOutputing(void);
 void Output_stopOutputing(void);
 
