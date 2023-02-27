@@ -20,6 +20,10 @@ exports.listen = function(server) {
 function handleCommand(socket) {
 	// Pased string of comamnd to relay
 	socket.on('daUdpCommand', function(data) {
+		var errorCTimer = setTimeout(function() {
+			socket.emit('daError', "Server Error");
+		}, 5000);
+
 		console.log('daUdpCommand command: ' + data);
 
 		// Info for connecting to the local process via UDP
@@ -40,6 +44,8 @@ function handleCommand(socket) {
 		});
 		// Handle an incoming message over the UDP from the local application.
 		client.on('message', function (message, remote) {
+			clearTimeout(errorCTimer);
+
 			console.log("UDP Client: message Rx" + remote.address + ':' + remote.port +' - ' + message);
 
 			var reply = message.toString('utf8')

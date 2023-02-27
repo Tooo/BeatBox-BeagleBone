@@ -3,11 +3,8 @@
 
 // Make connection to server when web page is fully loaded.
 var socket = io.connect();
+var errorNodeTimer;
 $(document).ready(function() {
-	sendCommandViaUDP("mode");
-	sendCommandViaUDP("volume");
-	sendCommandViaUDP("tempo");
-
 	window.setInterval(function() {requestDeviceUpTime()}, 1000);
 
 	$('#btnModeNone').click(function(){
@@ -45,6 +42,11 @@ $(document).ready(function() {
 	});
 	
 	socket.on('commandReply', function(result) {
+		if (errorNodeTimer) {
+			clearTimeout(errorNodeTimer);
+			errorNodeTimer = null;
+		}
+		$('#error-box').hide();
 		const strArray = result.split(" ");
 		switch(strArray[0]) {
 			case "mode":
@@ -66,16 +68,31 @@ $(document).ready(function() {
 				break;
 		}
 	});
+
+	socket.on('daError', function(result) {
+		if (errorNodeTimer) {
+			clearTimeout(errorNodeTimer);
+			errorNodeTimer = null;
+		}
+		$('#error-box').show();
+		$('#error-text').text("SERVER ERROR: No response from beatbox application. Is it running?");
+		console.log("SERVER ERROR: No response from beatbox application. Is it running?");
+	});
 	
 });
 
 function sendCommandViaUDP(message) {
 	socket.emit('daUdpCommand', message);
+	errorNodeTimer = setTimeout(function() {
+		$('#error-box').show();
+		$('#error-text').text("SERVER ERROR: No response from Nodejs. Is it running?");
+		console.log("SERVER ERROR: No response from Nodejs. Is it running?");
+	}, 2000);
 };
 
 function requestDeviceUpTime() {
-	socket.emit('daUdpCommand', "uptime");
-	socket.emit('daUdpCommand', "info");
+	sendCommandViaUDP("uptime");
+	sendCommandViaUDP("info");
 };
 
 function updateDeviceUpTime(uptime) {
