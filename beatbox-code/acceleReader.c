@@ -7,9 +7,6 @@
 #include "beatsMaker.h"
 #include "periodTimer.h"
 
-#define X_GFORCE_DEFAULT -400
-#define Y_GFORCE_DEFAULT -300
-#define Z_GFORCE_DEFAULT 17000
 #define GFORCE_TOLERANCE 4000
 
 #define AXIS_COUNT 3
