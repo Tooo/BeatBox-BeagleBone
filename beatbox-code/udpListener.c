@@ -53,6 +53,7 @@ static void Udp_stop(void);
 static void Udp_unknown(void);
 
 static int Udp_getNumber(char* messageTx);
+static int Udp_getUptime();
 
 // Return UDP message
 static void Udp_send(char* messageTx);
@@ -216,7 +217,8 @@ static void Udp_info(void)
     int mode = BeatsMaker_getMode();
     int volume = AudioMixer_getVolume();
     int tempo = BeatsMaker_getBpm();
-    snprintf(messageTx, MAX_LEN, "info mode %d volume %d tempo %d", mode, volume, tempo);
+    int uptime = Udp_getUptime();
+    snprintf(messageTx, MAX_LEN, "info mode %d volume %d tempo %d uptime %d", mode, volume, tempo, uptime);
     Udp_send(messageTx);
 }
 
@@ -237,6 +239,14 @@ static int Udp_getNumber(char* messageTx)
 {
     char* token = strtok(messageTx, " ");
     token = strtok(NULL, " ");
+    return atoi(token);
+}
+
+static int Udp_getUptime()
+{
+    char buffer[MAX_LEN];
+    System_readFile(uptimePath, buffer);
+    char* token = strtok(buffer, ".");
     return atoi(token);
 }
 

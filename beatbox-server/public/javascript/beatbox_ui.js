@@ -58,13 +58,11 @@ $(document).ready(function() {
 			case "tempo":
 				updateTempo(strArray[1]);
 				break;
-			case "uptime":
-				updateDeviceUpTime(strArray[1]);
-				break;
 			case "info":
 				updateMode(strArray[2]);
 				updateVolume(strArray[4]);
 				updateTempo(strArray[6]);
+				updateDeviceUpTime(strArray[8]);
 				break;
 		}
 	});
@@ -91,7 +89,6 @@ function sendCommandViaUDP(message) {
 };
 
 function requestDeviceUpTime() {
-	sendCommandViaUDP("uptime");
 	sendCommandViaUDP("info");
 };
 
