@@ -97,6 +97,19 @@ void AudioMixer_cleanup(void)
 	free(playbackBuffer);
 	playbackBuffer = NULL;
 
+	pthread_mutex_lock(&audioMutex);
+	{
+		for (int i = 0; i < MAX_SOUND_BITES; i++) {
+			if (!soundBites[i].pSound) {
+				wavedata_t* pSound = soundBites[i].pSound;
+				AudioMixer_freeWaveFileData(pSound);
+				free(pSound);
+				soundBites[i].pSound = NULL;
+				soundBites[i].location = 0;
+			}
+		}
+	}
+	pthread_mutex_unlock(&audioMutex);
 	fflush(stdout);
 }
 
@@ -150,6 +163,7 @@ void AudioMixer_readWaveFileIntoMemory(char *fileName, wavedata_t *pSound)
 				pSound->numSamples, fileName, samplesRead);
 		exit(EXIT_FAILURE);
 	}
+	fclose(file);
 }
 
 void AudioMixer_freeWaveFileData(wavedata_t *pSound)
@@ -328,6 +342,7 @@ static void fillPlaybackBuffer(short *buff, int size)
 
 			if (newLocation == numSamples) {
 				AudioMixer_freeWaveFileData(pSound);
+				free(pSound);
 				soundBites[i].pSound = NULL;
 				soundBites[i].location = 0;
 			} else {
