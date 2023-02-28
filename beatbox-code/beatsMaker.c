@@ -34,6 +34,19 @@ static char soundFile[SOUND_COUNT][FILENAME_MAX] = {
     "beatbox-wav-files/100059__menegass__gui-drum-snare-soft.wav"
 };
 
+// Pattern for no beats
+//   Base, Hi-hat, Snare
+static bool beatsNone[BEAT_COUNT][SOUND_COUNT] = {
+    {false, false, false},
+    {false, false, false},
+    {false, false, false},
+    {false, false, false},
+    {false, false, false},
+    {false, false, false},
+    {false, false, false},
+    {false, false, false}
+};
+
 // Pattern for beats1
 //   Base, Hi-hat, Snare
 static bool beats1[BEAT_COUNT][SOUND_COUNT] = {
@@ -110,7 +123,7 @@ void BeatsMaker_changeMode(BeatsModeEnum mode) {
 
     modeNum = mode;
     if (mode == BEATS_MODE_0) {
-        currentBeats = NULL;
+        currentBeats = beatsNone;
     } else if (mode == BEATS_MODE_1) {
         currentBeats = beats1;
     } else if (mode == BEATS_MODE_2) {
@@ -131,11 +144,6 @@ void BeatsMaker_playSound(SoundEnum sound) {
 void* beatsThreadFunction(void* arg)
 {
     while(!Shutdown_isShuttingDown()) {
-        if (currentBeats == NULL) {
-            Timer_sleepForMs(beatsSleepMs);
-            continue;
-        }
-
         for (int i = 0; i < SOUND_COUNT; i++) {
             if (currentBeats[beatIndex][i]) {
                 BeatsMaker_playSound(i);

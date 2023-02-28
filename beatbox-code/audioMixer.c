@@ -39,7 +39,7 @@ typedef struct {
 static playbackSound_t soundBites[MAX_SOUND_BITES];
 
 // Playback threading
-void* playbackThreadFunction(void* arg);
+static void* playbackThreadFunction(void* arg);
 static pthread_t playbackThread;
 static pthread_mutex_t audioMutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -100,7 +100,7 @@ void AudioMixer_cleanup(void)
 	pthread_mutex_lock(&audioMutex);
 	{
 		for (int i = 0; i < MAX_SOUND_BITES; i++) {
-			if (!soundBites[i].pSound) {
+			if (soundBites[i].pSound) {
 				wavedata_t* pSound = soundBites[i].pSound;
 				AudioMixer_freeWaveFileData(pSound);
 				free(pSound);
@@ -206,6 +206,8 @@ void AudioMixer_queueSound(wavedata_t *pSound)
 
 		if (index == MAX_SOUND_BITES) {
 			printf("ERROR: No Free Slots found in SoundBites\n");
+			AudioMixer_freeWaveFileData(pSound);
+			free(pSound);
 		}
 	}
 	pthread_mutex_unlock(&audioMutex);
@@ -355,9 +357,8 @@ static void fillPlaybackBuffer(short *buff, int size)
 
 }
 
-void* playbackThreadFunction(void* arg)
+static void* playbackThreadFunction(void* arg)
 {
-
 	while (!Shutdown_isShuttingDown()) {
 		// Generate next block of audio
 		fillPlaybackBuffer(playbackBuffer, playbackBufferSize);
