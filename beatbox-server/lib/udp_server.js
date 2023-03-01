@@ -22,7 +22,7 @@ function handleCommand(socket) {
 	socket.on('daUdpCommand', function(data) {
 		var errorCTimer = setTimeout(function() {
 			socket.emit('daError', "Server Error");
-		}, 5000);
+		}, 3000);
 
 		console.log('daUdpCommand command: ' + data);
 

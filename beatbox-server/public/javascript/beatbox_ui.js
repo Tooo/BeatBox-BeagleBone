@@ -4,6 +4,9 @@
 // Make connection to server when web page is fully loaded.
 var socket = io.connect();
 var errorNodeTimer;
+var nodeFailCount = 0;
+var cFailCount = 0;
+var failTolerance = 5;
 $(document).ready(function() {
 	window.setInterval(function() {requestDeviceUpTime()}, 1000);
 
@@ -47,6 +50,9 @@ $(document).ready(function() {
 			errorNodeTimer = null;
 		}
 		$('#error-box').hide();
+		nodeFailCount = 0;
+		cFailCount = 0;
+
 		const strArray = result.split(" ");
 		switch(strArray[0]) {
 			case "mode":
@@ -72,9 +78,12 @@ $(document).ready(function() {
 			clearTimeout(errorNodeTimer);
 			errorNodeTimer = null;
 		}
-		$('#error-box').show();
-		$('#error-text').text("SERVER ERROR: No response from beatbox application. Is it running?");
-		console.log("SERVER ERROR: No response from beatbox application. Is it running?");
+		cFailCount++;
+		if (cFailCount >= failTolerance) {
+			$('#error-box').show();
+			$('#error-text').text("SERVER ERROR: No response from beatbox application. Is it running?");
+			console.log("SERVER ERROR: No response from beatbox application. Is it running?");
+		}
 	});
 	
 });
@@ -82,9 +91,12 @@ $(document).ready(function() {
 function sendCommandViaUDP(message) {
 	socket.emit('daUdpCommand', message);
 	errorNodeTimer = setTimeout(function() {
-		$('#error-box').show();
-		$('#error-text').text("SERVER ERROR: No response from Nodejs. Is it running?");
-		console.log("SERVER ERROR: No response from Nodejs. Is it running?");
+		nodeFailCount++;
+		if (nodeFailCount >= failTolerance) {
+			$('#error-box').show();
+			$('#error-text').text("SERVER ERROR: No response from Nodejs. Is it running?");
+			console.log("SERVER ERROR: No response from Nodejs. Is it running?");
+		}
 	}, 2000);
 };
 
